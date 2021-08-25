@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "60689631826",
+    "project_id": "sembako-pakde",
+    "storage_bucket": "sembako-pakde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60689631826:android:cc9cafcf047d087bf4ad8b",
+        "android_client_info": {
+          "package_name": "com.labib.sembago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60689631826-gvenp2nqen24ci3nf9ae95147742i7jn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGh8_6WMkuqo7eY2a3qsgm0tdjBea5aks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60689631826-gvenp2nqen24ci3nf9ae95147742i7jn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

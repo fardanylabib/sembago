@@ -4,6 +4,7 @@ import 'package:sembago/src/pages/mainPage.dart';
 import 'package:sembago/src/pages/product_detail.dart';
 import 'package:sembago/src/widgets/customRoute.dart';
 import 'package:sembago/src/pages/welcomePage.dart';
+import 'package:sembago/src/pages/loadingPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -48,18 +49,16 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     // Show error message if initialization failed
-    if (_error == true) {
-      return SnackBar(
-        content: const Text('Firebase initialization failed!'),
-      );
-    }
-
-    // // Show a loader until FlutterFire is initialized
-    // if (_initialized == false) {
+    // if (_error == true) {
     //   return SnackBar(
-    //     content: const Text('Loading...'),
+    //     content: const Text('Firebase initialization failed!'),
     //   );
     // }
+
+    // Show a loader until FlutterFire is initialized
+    if (_initialized == false) {
+      return LoadingPage();
+    }
 
     return AppContainer();
   }
