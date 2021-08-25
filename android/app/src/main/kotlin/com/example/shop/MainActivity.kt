@@ -1,4 +1,4 @@
-package com.example.shop
+package com.labib.sembago
 
 import io.flutter.embedding.android.FlutterActivity
 
