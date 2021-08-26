@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sembago/src/widgets/bezierContainer.dart';
 import 'package:sembago/src/pages/loginPage.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -13,6 +16,13 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _success;
+  String _userEmail = '';
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
