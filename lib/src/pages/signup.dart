@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sembago/src/widgets/bezierContainer.dart';
 import 'package:sembago/src/pages/loginPage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -126,35 +127,10 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'd',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
-          ),
-          children: [
-            TextSpan(
-              text: 'ev',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
-    );
-  }
-
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
-        _entryField("Email id"),
+        _entryField("Email"),
         _entryField("Password", isPassword: true),
       ],
     );
@@ -181,9 +157,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: height * .2),
-                    _title(),
-                    SizedBox(
-                      height: 50,
+                    Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.transparent,
+                      child: SvgPicture.asset('assets/sembago.svg',
+                          semanticsLabel: 'Sembago Logo'),
                     ),
                     _emailPasswordWidget(),
                     SizedBox(

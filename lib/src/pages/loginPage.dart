@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sembago/src/pages/signup.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/bezierContainer.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);

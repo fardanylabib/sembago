@@ -5,8 +5,10 @@ import 'package:sembago/src/pages/product_detail.dart';
 import 'package:sembago/src/widgets/customRoute.dart';
 import 'package:sembago/src/pages/welcomePage.dart';
 import 'package:sembago/src/pages/loadingPage.dart';
+import 'package:sembago/src/pages/errorPage.dart';
+import 'package:sembago/src/firebase/firebase.dart';
+import 'package:sembago/src/helper/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'src/themes/theme.dart';
 
@@ -21,45 +23,32 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   // Set default `_initialized` and `_error` state to false
-  bool _initialized = false;
-  bool _error = false;
+  int _status = Status.LOADING;
 
   // Define an async function to initialize FlutterFire
-  void initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      // Set `_error` state to true if Firebase initialization fails
-      setState(() {
-        _error = true;
-      });
-    }
+  void initializeFirebase() async {
+    int value = await FirebaseClass.initFirebase();
+    setState(() {
+      _status = value;
+    });
   }
 
   @override
-  void initState() {
-    initializeFlutterFire();
+  initState() {
+    initializeFirebase();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Show error message if initialization failed
-    // if (_error == true) {
-    //   return SnackBar(
-    //     content: const Text('Firebase initialization failed!'),
-    //   );
-    // }
-
     // Show a loader until FlutterFire is initialized
-    if (_initialized == false) {
+    if (_status == Status.LOADING) {
       return LoadingPage();
     }
-
+    // Show error message if initialization failed
+    if (_status == Status.ERROR) {
+      return ErrorPage();
+    }
     return AppContainer();
   }
 }
