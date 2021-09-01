@@ -8,10 +8,10 @@ import 'package:sembago/src/widgets/title_text.dart';
 import 'package:sembago/src/widgets/extentions.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+  MainPage({Key key, this.title, this.arguments}) : super(key: key);
 
   final String title;
-
+  final String arguments;
   @override
   _MainPageState createState() => _MainPageState();
 }

@@ -34,7 +34,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ],
             color: Colors.white),
         child: Text(
-          'Login',
+          'Masuk',
           style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
         ),
       ),
@@ -56,7 +56,7 @@ class _WelcomePageState extends State<WelcomePage> {
           border: Border.all(color: Colors.white, width: 2),
         ),
         child: Text(
-          'Register now',
+          'Daftar Baru',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),

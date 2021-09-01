@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sembago/src/helper/validation.dart';
 import 'package:sembago/src/pages/signup.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sembago/src/functions/mainFunction.dart';
 import '../widgets/bezierContainer.dart';
+import '../widgets/alert.dart';
+import '../widgets/loadingOverlay.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -13,6 +17,27 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+  
+  void processSignIn() async{
+    final overlay = LoadingOverlay.of(context);
+    final result = await overlay.during(AppFunction.signInWithEmailAndPassword(_emailController.text, _passwordController.text));
+    if(!Validation.isEmailValid(result.toString())){ 
+      Alert.showAlert(context, message:result.toString());
+      return;
+    }
+    Navigator.of(context).pushNamed('/main', arguments: result);
+  }
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -26,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
-            Text('Back',
+            Text('Kembali',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
@@ -34,8 +59,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
-    return Container(
+  Widget _entryField({
+    String title,
+    TextEditingController controller,
+    bool isPassword = false
+  }) {
+      return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
+              controller: controller,
               obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -59,27 +89,32 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-      child: Text(
-        'Login',
-        style: TextStyle(fontSize: 20, color: Colors.white),
-      ),
+    return InkWell(
+      onTap: () {
+        processSignIn();
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+        child: Text(
+          'Masuk',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      )  
     );
   }
 
@@ -99,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Text('or'),
+          Text('atau'),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -152,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                     topRight: Radius.circular(5)),
               ),
               alignment: Alignment.center,
-              child: Text('Log in with Facebook',
+              child: Text('Masuk dengan Facebook',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -178,14 +213,14 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Don\'t have an account ?',
+              'Belum punya akun?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              'Register',
+              'Daftar',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
@@ -197,35 +232,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'd',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
-          ),
-          children: [
-            TextSpan(
-              text: 'ev',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
-    );
-  }
-
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email id"),
-        _entryField("Password", isPassword: true),
+        _entryField(title:"Email", controller: _emailController),
+        _entryField(title:"Password", isPassword: true, controller: _passwordController),
       ],
     );
   }
@@ -250,15 +261,20 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: height * .2),
-                  _title(),
-                  SizedBox(height: 50),
+                  Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.transparent,
+                    child: SvgPicture.asset('assets/sembago.svg',
+                        semanticsLabel: 'Sembago Logo'),
+                  ),
                   _emailPasswordWidget(),
                   SizedBox(height: 20),
                   _submitButton(),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
-                    child: Text('Forgot Password ?',
+                    child: Text('Lupa Password ?',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500)),
                   ),

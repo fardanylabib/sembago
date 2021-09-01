@@ -6,7 +6,7 @@ import 'package:sembago/src/widgets/customRoute.dart';
 import 'package:sembago/src/pages/welcomePage.dart';
 import 'package:sembago/src/pages/loadingPage.dart';
 import 'package:sembago/src/pages/errorPage.dart';
-import 'package:sembago/src/firebase/firebase.dart';
+import 'package:sembago/src/functions/mainFunction.dart';
 import 'package:sembago/src/helper/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,9 +25,9 @@ class _AppState extends State<App> {
   // Set default `_initialized` and `_error` state to false
   int _status = Status.LOADING;
 
-  // Define an async function to initialize FlutterFire
-  void initializeFirebase() async {
-    int value = await FirebaseClass.initFirebase();
+  // Define an async function to initialize Application functionality
+  void initFunctions() async {
+    int value = await AppFunction.initialize();
     setState(() {
       _status = value;
     });
@@ -35,7 +35,7 @@ class _AppState extends State<App> {
 
   @override
   initState() {
-    initializeFirebase();
+    initFunctions();
     super.initState();
   }
 
@@ -64,11 +64,11 @@ class AppContainer extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      routes: Routes.getRoute(),
+      // routes: Routes.getRoute(),
       onGenerateRoute: (RouteSettings settings) {
         if (settings.name.contains('main')) {
           return CustomRoute<bool>(
-              builder: (BuildContext context) => MainPage());
+              builder: (BuildContext context) => MainPage(arguments:settings.arguments));
         } else if (settings.name.contains('detail')) {
           return CustomRoute<bool>(
               builder: (BuildContext context) => ProductDetailPage());

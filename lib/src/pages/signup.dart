@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sembago/src/helper/validation.dart';
 import 'package:sembago/src/widgets/bezierContainer.dart';
 import 'package:sembago/src/pages/loginPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'package:sembago/src/functions/mainFunction.dart';
+import '../widgets/alert.dart';
+import '../widgets/loadingOverlay.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -17,12 +17,27 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
-  bool _success;
-  String _userEmail = '';
+  void processRegister() async{
+    final overlay = LoadingOverlay.of(context);
+    final result = await overlay.during(AppFunction.registerWithEmailAndPassword(_emailController.text, _passwordController.text));
+    if(!Validation.isEmailValid(result.toString())){ 
+      Alert.showAlert(context, message:result.toString());
+      return;
+    }
+    Navigator.of(context).pushNamed('/main', arguments: result);
+  }
+
 
   Widget _backButton() {
     return InkWell(
@@ -37,7 +52,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
-            Text('Back',
+            Text('Kembali',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
@@ -45,7 +60,11 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField({
+      String title,
+      TextEditingController controller,
+      bool isPassword = false
+    }) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -59,6 +78,7 @@ class _SignUpPageState extends State<SignUpPage> {
             height: 10,
           ),
           TextField(
+              controller: controller,
               obscureText: isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -70,26 +90,31 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-      child: Text(
-        'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+    return InkWell(
+      onTap: () {
+        processRegister();
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+        child: Text(
+          'Daftar Sekarang',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
       ),
     );
   }
@@ -108,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Already have an account ?',
+              'Sudah punya akun?',
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
@@ -130,8 +155,8 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email"),
-        _entryField("Password", isPassword: true),
+        _entryField(title:"Email", controller: _emailController),
+        _entryField(title:"Password", isPassword: true, controller: _passwordController),
       ],
     );
   }
@@ -169,8 +194,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 20,
                     ),
                     _submitButton(),
-                    SizedBox(height: height * .14),
+                    SizedBox(height: 20),
                     _loginAccountLabel(),
+
                   ],
                 ),
               ),
