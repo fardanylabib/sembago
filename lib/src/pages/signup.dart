@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sembago/src/helper/validation.dart';
 import 'package:sembago/src/widgets/bezierContainer.dart';
 import 'package:sembago/src/pages/loginPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,8 +30,24 @@ class _SignUpPageState extends State<SignUpPage> {
   void processRegister() async{
     final overlay = LoadingOverlay.of(context);
     final result = await overlay.during(AppFunction.registerWithEmailAndPassword(_emailController.text, _passwordController.text));
-    if(result.error.isNotEmpty){ 
+    if(result.error != null){ 
       Alert.showAlert(context, message:result.error);
+      return;
+    }
+    if(result.email != null && !result.emailVerified){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Selangkah lagi!'),
+          content: Text('Untuk menyelesaikan registrasi, silahkan buka inbox email anda (' +result.email+') lalu klik link verifikasi'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pushNamed(''),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      );
       return;
     }
     Navigator.of(context).pushNamed('/main', arguments: result);

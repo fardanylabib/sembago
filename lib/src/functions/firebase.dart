@@ -24,6 +24,7 @@ class FirebaseClass {
         email: email, 
         password: password
       );
+      await userCredential.user.sendEmailVerification();
       String idToken = await userCredential.user.getIdToken();
       return AuthData(
         email: userCredential.user.email,

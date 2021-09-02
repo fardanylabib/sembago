@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sembago/src/helper/validation.dart';
 import 'package:sembago/src/pages/signup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sembago/src/functions/mainFunction.dart';
