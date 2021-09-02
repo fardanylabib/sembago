@@ -1,3 +1,5 @@
+import 'package:sembago/src/model/auth.dart';
+
 import './firebase.dart';
 
 class AppFunction{
@@ -6,13 +8,17 @@ class AppFunction{
     return FirebaseClass.initFirebase();
   }
 
-  static Future registerWithEmailAndPassword(String email, String password){
+  static Future<AuthData> registerWithEmailAndPassword(String email, String password){
     //using firebase
     return FirebaseClass.register(email, password);
   }
 
-  static Future signInWithEmailAndPassword(String email, String password){
+  static Future<AuthData> signInWithEmailAndPassword(String email, String password){
     //using firebase
     return FirebaseClass.signIn(email, password);
+  }
+
+  static Future<AuthData> sendEmailVerification(){
+    return FirebaseClass.sendVerification();
   }
 }

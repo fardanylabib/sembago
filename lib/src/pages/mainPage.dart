@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sembago/src/model/auth.dart';
 import 'package:sembago/src/pages/home_page.dart';
 import 'package:sembago/src/pages/shopping_cart_page.dart';
 import 'package:sembago/src/themes/light_color.dart';
@@ -11,7 +12,7 @@ class MainPage extends StatefulWidget {
   MainPage({Key key, this.title, this.arguments}) : super(key: key);
 
   final String title;
-  final String arguments;
+  final AuthData arguments;
   @override
   _MainPageState createState() => _MainPageState();
 }

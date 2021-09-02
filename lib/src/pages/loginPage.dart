@@ -31,11 +31,52 @@ class _LoginPageState extends State<LoginPage> {
   void processSignIn() async{
     final overlay = LoadingOverlay.of(context);
     final result = await overlay.during(AppFunction.signInWithEmailAndPassword(_emailController.text, _passwordController.text));
-    if(!Validation.isEmailValid(result.toString())){ 
-      Alert.showAlert(context, message:result.toString());
+    if(result.error != null){ 
+      Alert.showAlert(context, message:result.error);
+      return;
+    }
+    if(result.email != null && !result.emailVerified){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Email belum diverifikasi'),
+          content: Text('Silahkan buka inbox email anda (' +result.email+') lalu klik link verifikasi'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => resendVerification(),
+              child: const Text('Kirim Link Lagi'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      );
       return;
     }
     Navigator.of(context).pushNamed('/main', arguments: result);
+  }
+
+  void resendVerification() async {
+    Navigator.pop(context);
+    final overlay = LoadingOverlay.of(context);
+    final result = await overlay.during(AppFunction.sendEmailVerification());
+    if(result.verificationSent){
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Link verifikasi terkirim'),
+          content: Text('Silahkan buka inbox email anda (' +result.email+') lalu klik link verifikasi'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget _backButton() {
@@ -245,7 +286,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: Container(
+      body: Container(
       height: height,
       child: Stack(
         children: <Widget>[

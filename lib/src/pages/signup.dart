@@ -31,8 +31,8 @@ class _SignUpPageState extends State<SignUpPage> {
   void processRegister() async{
     final overlay = LoadingOverlay.of(context);
     final result = await overlay.during(AppFunction.registerWithEmailAndPassword(_emailController.text, _passwordController.text));
-    if(!Validation.isEmailValid(result.toString())){ 
-      Alert.showAlert(context, message:result.toString());
+    if(result.error.isNotEmpty){ 
+      Alert.showAlert(context, message:result.error);
       return;
     }
     Navigator.of(context).pushNamed('/main', arguments: result);
