@@ -2,10 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sembago/src/helper/constants.dart';
 import 'package:sembago/src/model/auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../model/store.dart';
+import 'dart:convert';
 
 class FirebaseClass {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // Define an async function to initialize FlutterFire
   static Future<int> initFirebase() async {
     try {
@@ -107,5 +110,21 @@ class FirebaseClass {
     return AuthData(
         error: Auth.USER_NOT_FOUND
     );
+  }
+
+  static Future<Iterable<Store>> storeList() async{
+    CollectionReference stores = _firestore.collection('store');
+    QuerySnapshot query = await stores.get();
+    return query.docs.map((doc) {
+      final item = doc.data();
+      print(item['employees'].runtimeType);
+      return Store(
+        address: item['address'], 
+        phone: item['phone'],
+        name: item['name'],
+        inventoryID: item['inventoryID'],
+        // employees: item['employees']
+      );
+    });
   }
 }

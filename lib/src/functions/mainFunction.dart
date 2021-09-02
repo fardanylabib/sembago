@@ -1,5 +1,5 @@
 import 'package:sembago/src/model/auth.dart';
-
+import '../model/store.dart';
 import './firebase.dart';
 
 class AppFunction{
@@ -20,5 +20,9 @@ class AppFunction{
 
   static Future<AuthData> sendEmailVerification(){
     return FirebaseClass.sendVerification();
+  }
+
+  static Future<Iterable<Store>> storeList(){
+    return FirebaseClass.storeList();
   }
 }

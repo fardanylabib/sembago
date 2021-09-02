@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sembago/src/functions/mainFunction.dart';
 import 'package:sembago/src/model/auth.dart';
+import 'package:sembago/src/model/store.dart';
 import 'package:sembago/src/pages/home_page.dart';
 import 'package:sembago/src/pages/shopping_cart_page.dart';
 import 'package:sembago/src/themes/light_color.dart';
@@ -19,6 +21,23 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool isHomePageSelected = true;
+  Iterable<Store> _stores = [];
+
+  void initStores()async{
+    Iterable<Store> storeList = await AppFunction.storeList();
+    print("store list = ");
+    print(storeList);
+    setState(() {
+      _stores = storeList;
+    });
+  }
+
+  @override
+  initState(){
+    initStores();
+    super.initState();
+  }
+
   Widget _appBar() {
     return Container(
       padding: AppTheme.padding,
