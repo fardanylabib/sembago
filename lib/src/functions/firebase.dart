@@ -116,15 +116,7 @@ class FirebaseClass {
     CollectionReference stores = _firestore.collection('store');
     QuerySnapshot query = await stores.get();
     return query.docs.map((doc) {
-      final item = doc.data();
-      print(item['employees'].runtimeType);
-      return Store(
-        address: item['address'], 
-        phone: item['phone'],
-        name: item['name'],
-        inventoryID: item['inventoryID'],
-        // employees: item['employees']
-      );
+      return Store.fromJson(doc.data());
     });
   }
 }

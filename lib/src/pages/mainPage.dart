@@ -25,8 +25,6 @@ class _MainPageState extends State<MainPage> {
 
   void initStores()async{
     Iterable<Store> storeList = await AppFunction.storeList();
-    print("store list = ");
-    print(storeList);
     setState(() {
       _stores = storeList;
     });
