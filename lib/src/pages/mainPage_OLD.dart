@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sembago/src/functions/mainFunction.dart';
 import 'package:sembago/src/model/auth.dart';
 import 'package:sembago/src/model/store.dart';
+import 'package:sembago/src/pages/home_page.dart';
 import 'package:sembago/src/pages/shopping_cart_page.dart';
-import 'package:sembago/src/pages/storeListPage.dart';
 import 'package:sembago/src/themes/light_color.dart';
 import 'package:sembago/src/themes/theme.dart';
 import 'package:sembago/src/widgets/BottomNavigationBar/bottom_navigation_bar.dart';
@@ -160,7 +160,7 @@ class _MainPageState extends State<MainPage> {
                         switchInCurve: Curves.easeInToLinear,
                         switchOutCurve: Curves.easeOutBack,
                         child: isHomePageSelected
-                            ? StoreListPage()
+                            ? MyHomePage()
                             : Align(
                                 alignment: Alignment.topCenter,
                                 child: ShoppingCartPage(),

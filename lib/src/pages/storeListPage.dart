@@ -7,16 +7,16 @@ import 'package:sembago/src/widgets/product_card.dart';
 import 'package:sembago/src/widgets/product_icon.dart';
 import 'package:sembago/src/widgets/extentions.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class StoreListPage extends StatefulWidget {
+  StoreListPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _StoreListPageState createState() => _StoreListPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _StoreListPageState extends State<StoreListPage> {
   Widget _icon(IconData icon, {Color color = LightColor.iconColor}) {
     return Container(
       padding: EdgeInsets.all(10),
@@ -29,32 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
         color: color,
       ),
     ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)));
-  }
-
-  Widget _categoryWidget() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      width: AppTheme.fullWidth(context),
-      height: 80,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: AppData.categoryList
-            .map(
-              (category) => ProductIcon(
-                model: category,
-                onSelected: (model) {
-                  setState(() {
-                    AppData.categoryList.forEach((item) {
-                      item.isSelected = false;
-                    });
-                    model.isSelected = true;
-                  });
-                },
-              ),
-            )
-            .toList(),
-      ),
-    );
   }
 
   Widget _productWidget() {
@@ -131,7 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             _search(),
-            _categoryWidget(),
             _productWidget(),
           ],
         ),
