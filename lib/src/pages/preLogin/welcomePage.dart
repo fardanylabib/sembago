@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sembago/src/pages/loginPage.dart';
-import 'package:sembago/src/pages/signup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import './loginPage.dart';
+import './signupPage.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);

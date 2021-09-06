@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sembago/src/widgets/bezierContainer.dart';
-import 'package:sembago/src/pages/loginPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sembago/src/functions/mainFunction.dart';
-import '../widgets/alert.dart';
-import '../widgets/loadingOverlay.dart';
+import 'package:sembago/src/model/dataContext.dart';
+import './loginPage.dart';
+import '../../functions/mainFunction.dart';
+import '../../widgets/bezierContainer.dart';
+import '../../widgets/alert.dart';
+import '../../widgets/loadingOverlay.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);
@@ -50,9 +51,9 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       return;
     }
-    Navigator.of(context).pushNamed('/main', arguments: result);
+    DataContext data = DataContext(auth: result);
+    Navigator.of(context).pushNamed('/stores', arguments: data);
   }
-
 
   Widget _backButton() {
     return InkWell(

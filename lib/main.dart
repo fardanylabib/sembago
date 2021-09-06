@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sembago/src/config/route.dart';
+import 'package:sembago/src/pages/layout/mainLayout.dart';
 import 'package:sembago/src/pages/mainPage.dart';
 import 'package:sembago/src/pages/product_detail.dart';
 import 'package:sembago/src/widgets/customRoute.dart';
-import 'package:sembago/src/pages/welcomePage.dart';
-import 'package:sembago/src/pages/loadingPage.dart';
-import 'package:sembago/src/pages/errorPage.dart';
+import 'package:sembago/src/pages/preLogin/welcomePage.dart';
+import 'package:sembago/src/pages/suspended/loadingPage.dart';
+import 'package:sembago/src/pages/suspended/errorPage.dart';
 import 'package:sembago/src/functions/mainFunction.dart';
 import 'package:sembago/src/helper/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -68,7 +68,7 @@ class AppContainer extends StatelessWidget {
       onGenerateRoute: (RouteSettings settings) {
         if (settings.name.contains('main')) {
           return CustomRoute<bool>(
-              builder: (BuildContext context) => MainPage(arguments:settings.arguments));
+              builder: (BuildContext context) => MainLayout(data:settings.arguments));
         } else if (settings.name.contains('detail')) {
           return CustomRoute<bool>(
               builder: (BuildContext context) => ProductDetailPage());

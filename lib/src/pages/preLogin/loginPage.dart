@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sembago/src/pages/signup.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sembago/src/functions/mainFunction.dart';
-import '../widgets/bezierContainer.dart';
-import '../widgets/alert.dart';
-import '../widgets/loadingOverlay.dart';
+import 'package:sembago/src/model/dataContext.dart';
+import './signupPage.dart';
+import '../../functions/mainFunction.dart';
+import '../../widgets/bezierContainer.dart';
+import '../../widgets/alert.dart';
+import '../../widgets/loadingOverlay.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -54,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
       );
       return;
     }
-    Navigator.of(context).pushNamed('/main', arguments: result);
+    DataContext data = DataContext(auth: result, route: '/stores');
+    Navigator.of(context).pushNamed('/main', arguments: data);
   }
 
   void resendVerification() async {

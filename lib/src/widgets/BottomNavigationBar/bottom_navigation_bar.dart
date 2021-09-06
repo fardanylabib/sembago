@@ -4,16 +4,15 @@ import 'package:sembago/src/widgets/BottomNavigationBar/bottom_curved_Painter.da
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final Function(int) onIconPresedCallback;
-  CustomBottomNavigationBar({Key key, this.onIconPresedCallback})
-      : super(key: key);
+  
+  CustomBottomNavigationBar({Key key, this.onIconPresedCallback}) : super(key: key);
 
   @override
   _CustomBottomNavigationBarState createState() =>
       _CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
-    with TickerProviderStateMixin {
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> with TickerProviderStateMixin {
   int _selectedIndex = 0;
 
   AnimationController _xController;
@@ -34,8 +33,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
 
   @override
   void didChangeDependencies() {
-    _xController.value =
-        _indexToPosition(_selectedIndex) / MediaQuery.of(context).size.width;
+    _xController.value = _indexToPosition(_selectedIndex) / MediaQuery.of(context).size.width;
     _yController.value = 1.0;
 
     super.didChangeDependencies();
