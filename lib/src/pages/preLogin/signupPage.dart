@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sembago/src/model/dataContext.dart';
+import 'package:sembago/src/themes/light_color.dart';
+import 'package:sembago/src/themes/theme.dart';
+import 'package:sembago/src/widgets/appBarTop.dart';
+import 'package:sembago/src/widgets/buttonBlock.dart';
+import 'package:sembago/src/widgets/buttonIcon.dart';
 import './loginPage.dart';
 import '../../functions/mainFunction.dart';
 import '../../widgets/bezierContainer.dart';
@@ -55,27 +60,6 @@ class _SignUpPageState extends State<SignUpPage> {
     Navigator.of(context).pushNamed('/stores', arguments: data);
   }
 
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Kembali',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _entryField({
       String title,
       TextEditingController controller,
@@ -105,36 +89,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _submitButton() {
-    return InkWell(
-      onTap: () {
-        processRegister();
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-        child: Text(
-          'Daftar Sekarang',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
   Widget _loginAccountLabel() {
     return InkWell(
       onTap: () {
@@ -156,9 +110,9 @@ class _SignUpPageState extends State<SignUpPage> {
               width: 10,
             ),
             Text(
-              'Login',
+              'Masuk',
               style: TextStyle(
-                  color: Color(0xfff79c4f),
+                  color: LightColor.orange,
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),
@@ -179,45 +133,37 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBarTop(title: "Daftar", noUser: true),
       body: Container(
-        height: height,
         child: Stack(
           children: <Widget>[
             Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
+              bottom: -AppTheme.fullHeight(context) * .3,
+              right: -MediaQuery.of(context).size.width * .2,
+              child: BezierContainer()
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    Container(
-                      height: 100,
-                      width: 100,
-                      color: Colors.transparent,
-                      child: SvgPicture.asset('assets/sembago.svg',
-                          semanticsLabel: 'Sembago Logo'),
-                    ),
-                    _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: 20),
-                    _loginAccountLabel(),
-
-                  ],
-                ),
+              child: ListView(
+                shrinkWrap: true,
+                padding: AppTheme.padding,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 30),
+                    height: 100,
+                    width: 100,
+                    color: Colors.transparent,
+                    child: SvgPicture.asset('assets/sembago.svg',
+                        semanticsLabel: 'Sembago Logo'),
+                  ),
+                  _emailPasswordWidget(),
+                  SizedBox(height: 20),
+                  ButtonBlock(text: "Daftar", onClick: processRegister),
+                  SizedBox(height: 20),
+                  _loginAccountLabel()
+                ],
               ),
-            ),
-            Positioned(top: 40, left: 0, child: _backButton()),
+            )
           ],
         ),
       ),

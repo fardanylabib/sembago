@@ -4,7 +4,6 @@ import 'package:sembago/src/helper/constants.dart';
 import 'package:sembago/src/model/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/store.dart';
-import 'dart:convert';
 
 class FirebaseClass {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -112,11 +111,36 @@ class FirebaseClass {
     );
   }
 
-  static Future<Iterable<Store>> storeList() async{
+  static Future<List<Store>> storeList() async{
     CollectionReference stores = _firestore.collection('store');
     QuerySnapshot query = await stores.get();
     return query.docs.map((doc) {
       return Store.fromJson(doc.data());
-    });
+    }).toList();
+  }
+
+  static Future<dynamic> createStore({
+    String address,
+    String name,
+    String phone,
+    String picture
+  }) async{
+    try{
+      Map<String, dynamic> data = Store(
+        address:address,
+        name: name,
+        phone: phone,
+        picture: picture
+      ).toJson();
+      DocumentReference newStore =  await _firestore.collection('store').add(data);
+      if(newStore.id != null){
+        DocumentSnapshot storeDoc = await newStore.get();
+        return Store.fromJson(storeDoc.data());
+      }
+      return StoreStatus.STORE_NOT_FOUND;
+    }catch(e){
+      String errorMsg = e.toString();
+      return "${StoreStatus.STORE_CREATION_ERROR} | $errorMsg";
+    }
   }
 }

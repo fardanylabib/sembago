@@ -21,10 +21,10 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool isHomePageSelected = true;
-  Iterable<Store> _stores = [];
+  List<Store> _stores = [];
   String _user;
   void initStores()async{
-    Iterable<Store> storeList = await AppFunction.storeList();
+    List<Store> storeList = await AppFunction.storeList();
     setState(() {
       _stores = storeList;
       _user = widget.arguments.email.split("@")[0];

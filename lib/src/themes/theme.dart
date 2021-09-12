@@ -32,11 +32,8 @@ class AppTheme {
     BoxShadow(color: Color(0xfff8f8f8), blurRadius: 10, spreadRadius: 15),
   ];
 
-  static EdgeInsets padding =
-      const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
-  static EdgeInsets hPadding = const EdgeInsets.symmetric(
-    horizontal: 10,
-  );
+  static EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
+  static EdgeInsets hPadding = const EdgeInsets.symmetric(horizontal: 10);
 
   static double fullWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
@@ -44,5 +41,18 @@ class AppTheme {
 
   static double fullHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
+  }
+
+  static BoxDecoration mainBackground(){
+    return BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          Color(0xfffbfbfb),
+          Color(0xfff7f7f7),
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      ),
+    );
   }
 }

@@ -19,10 +19,27 @@ class AppFunction{
   }
 
   static Future<AuthData> sendEmailVerification(){
+    //using firebase
     return FirebaseClass.sendVerification();
   }
 
-  static Future<Iterable<Store>> storeList(){
+  static Future<List<Store>> storeList(){
+    //using firebase
     return FirebaseClass.storeList();
+  }
+
+  static Future<Store> createStore({
+    String address,
+    String name,
+    String phone,
+    String picture
+  }){
+    //using firebase
+    return FirebaseClass.createStore(
+      address: address,
+      name: name,
+      phone: phone,
+      picture: picture
+    );
   }
 }

@@ -12,3 +12,8 @@ class Auth {
   static const String WRONG_PASSWORD = 'Password salah';
   static const String INVALID_FIELD = 'Input tidak valid';
 }
+
+class StoreStatus{
+  static const String STORE_NOT_FOUND = 'Toko tidak ditemukan';
+  static const String STORE_CREATION_ERROR = 'Toko gagal dibuat';
+}

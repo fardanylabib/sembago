@@ -20,6 +20,7 @@ class Store{
   List<Employee> employees ;
   String name ;
   String phone ;
+  String picture;
   Store({
     this.id,
     this.inventoryID,
@@ -27,6 +28,7 @@ class Store{
     this.address,
     this.employees,
     this.phone,
+    this.picture,
   });
 
   void addEmployees(List<Employee> employee){
@@ -39,17 +41,30 @@ class Store{
     final _name = data['name'] as String;
     final _address = data['address'] as String;
     final _phone = data['phone'] as String;
+    final _picture = data['picture'] as String;
     final _employeeData = data['employees'] as List<dynamic>;
     final _employees = _employeeData == null ? <Employee>[] : 
         _employeeData.map((emp) => Employee.fromJson(emp)).toList();
     // return result passing all the arguments
     return Store(
-      id: data['id'] as String,
+      id: _id,
       inventoryID: _inventoryID,
       name: _name,
       address: _address,
       phone: _phone,
-      employees: _employees
+      employees: _employees,
+      picture: _picture
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': this.name,
+      'inventoryID': this.inventoryID,
+      'address': this.address,
+      'phone': this.phone,
+      'employees': this.employees,
+      'picture': this.picture
+    };
   }
 }

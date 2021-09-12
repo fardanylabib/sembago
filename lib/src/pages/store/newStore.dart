@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sembago/src/model/dataContext.dart';
+import 'package:sembago/src/widgets/buttonBlock.dart';
+import 'package:sembago/src/widgets/buttonIcon.dart';
 import '../../functions/mainFunction.dart';
 import '../../widgets/bezierContainer.dart';
 import '../../widgets/alert.dart';
@@ -19,7 +21,7 @@ class _NewStoreState extends State<NewStore> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final List<EmployeeFormController> _employeeFormController = [EmployeeFormController()];
+  List<EmployeeFormController> _employeeFormController = [];
   
   @override
   void dispose() {
@@ -34,31 +36,26 @@ class _NewStoreState extends State<NewStore> {
     super.dispose();
   }
 
-  void addStore() async{
+  void addStore({
+      String address,
+      String name,
+      String phone,
+      String picture
+    }) async{
     final overlay = LoadingOverlay.of(context);
-    final result = await overlay.during(AppFunction.registerWithEmailAndPassword(_addressController.text, _passwordController.text));
-    if(result.error != null){ 
-      Alert.showAlert(context, message:result.error);
+    final result = await overlay.during(AppFunction.createStore(
+      address: address,
+      name: name,
+      phone: phone,
+      picture: picture
+    ));
+    if(result.runtimeType == String){ 
+      Alert.showAlert(context, message:result);
       return;
     }
-    if(result.email != null && !result.emailVerified){
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Selangkah lagi!'),
-          content: Text('Untuk menyelesaikan registrasi, silahkan buka inbox email anda (' +result.email+') lalu klik link verifikasi'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pushNamed(''),
-              child: const Text('Tutup'),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-    DataContext data = DataContext(auth: result);
-    Navigator.of(context).pushNamed('/stores', arguments: data);
+    
+    DataContext data = DataContext(store: result);
+    // Navigator.of(context).pushNamed('/stores', arguments: data);
   }
 
   Widget _backButton() {
@@ -88,7 +85,7 @@ class _NewStoreState extends State<NewStore> {
       bool isPassword = false
     }) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.only(bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -111,75 +108,69 @@ class _NewStoreState extends State<NewStore> {
     );
   }
 
-  Widget _submitButton() {
+  Widget _employeeAddButton() {
     return InkWell(
       onTap: () {
-        addStore();
+        //add employee form
+        setState(() {
+          _employeeFormController.add(EmployeeFormController());
+          _employeeFormController = _employeeFormController;
+        });
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.symmetric(vertical: 5),
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+            color: Colors.white,
+            border: Border.all(color: Colors.orange, width: 2), 
+        ),
         child: Text(
-          'Daftar Sekarang',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          '+ Tambah Karyawan',
+          style: TextStyle(fontSize: 20, color: Colors.orange),
         ),
       ),
     );
   }
 
-  Widget _loginAccountLabel() {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Sudah punya akun?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              'Login',
-              style: TextStyle(
-                  color: Color(0xfff79c4f),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+  Widget _employeeForm(){
+    if(_employeeFormController.length < 1){
+      return SizedBox(height: 5);
+    }
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.only(bottom: 10),
+      alignment: Alignment.topLeft,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          color: Colors.transparent,
+          border: Border.all(color: Colors.grey, width: 1), 
       ),
-    );
-  }
-
-  Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField(title:"Email", controller: _addressController),
-        _entryField(title:"Password", isPassword: true, controller: _passwordController),
-      ],
+      child: Column(
+        children: _employeeFormController.map((cont){
+          return Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.centerRight,
+                child: ButtonIcon(
+                  icon: Icons.delete_outline,
+                  onClick: (){
+                    setState(() {
+                      _employeeFormController.removeAt(_employeeFormController.indexOf(cont));
+                      _employeeFormController = _employeeFormController;
+                    });
+                  }
+                )
+              ),
+              _entryField(title:"Nama", controller: cont.nameController),
+              _entryField(title:"Email", controller: cont.emailController),
+              SizedBox(height:20)
+            ],
+          );
+        }).toList()
+      ),
     );
   }
 
@@ -204,21 +195,18 @@ class _NewStoreState extends State<NewStore> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: height * .2),
+                    _entryField(title:"Nama Toko", controller: _nameController),
+                    _entryField(title:"Alamat", controller: _addressController),
+                    _entryField(title:"No.Telepon", controller: _phoneController),
                     Container(
-                      height: 100,
-                      width: 100,
-                      color: Colors.transparent,
-                      child: SvgPicture.asset('assets/sembago.svg',
-                          semanticsLabel: 'Sembago Logo'),
+                      alignment: Alignment.centerLeft,
+                      child: Text("Karyawan", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                      margin: EdgeInsets.only(top: 30, bottom: 15),
                     ),
-                    _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: 20),
-                    _loginAccountLabel(),
-
+                    _employeeForm(),
+                    _employeeAddButton(),
+                    SizedBox(height: 30),
+                    ButtonBlock(text: "Buat Toko", onClick: addStore)
                   ],
                 ),
               ),

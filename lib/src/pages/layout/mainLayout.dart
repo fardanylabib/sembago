@@ -1,15 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:sembago/src/functions/mainFunction.dart';
-import 'package:sembago/src/model/auth.dart';
-import 'package:sembago/src/model/dataContext.dart';
-import 'package:sembago/src/model/store.dart';
-import 'package:sembago/src/pages/shopping_cart_page.dart';
-import 'package:sembago/src/pages/store/storeList.dart';
-import 'package:sembago/src/themes/light_color.dart';
-import 'package:sembago/src/themes/theme.dart';
-import 'package:sembago/src/widgets/BottomNavigationBar/bottom_navigation_bar.dart';
-import 'package:sembago/src/widgets/title_text.dart';
-import 'package:sembago/src/widgets/extentions.dart';
+import "package:flutter/material.dart";
+import "package:sembago/src/functions/mainFunction.dart";
+import "package:sembago/src/model/auth.dart";
+import "package:sembago/src/model/dataContext.dart";
+import "package:sembago/src/model/store.dart";
+import "package:sembago/src/pages/shopping_cart_page.dart";
+import "package:sembago/src/pages/store/storeList.dart";
+import "package:sembago/src/themes/light_color.dart";
+import "package:sembago/src/themes/theme.dart";
+import "package:sembago/src/widgets/BottomNavigationBar/bottom_navigation_bar.dart";
+import 'package:sembago/src/widgets/appBarTop.dart';
+import 'package:sembago/src/widgets/buttonIcon.dart';
+import "package:sembago/src/widgets/title_text.dart";
+import "package:sembago/src/widgets/extentions.dart";
 
 class MainLayout extends StatefulWidget {
   MainLayout({Key key, this.title, this.data}) : super(key: key);
@@ -21,16 +23,23 @@ class MainLayout extends StatefulWidget {
 }
 
 class _MainLayoutState extends State<MainLayout> {
-  
+
   //states
-  Iterable<Store> _stores = [];
+  List<Store> _stores = [];
   String _user;
   String _route;
-
   void initData()async{
-    Iterable<Store> storeList = await AppFunction.storeList();
-    String userMail = widget.data.auth != null? widget.data.auth.email.split("@")[0] : "";
+    List<Store> storeList = await AppFunction.storeList();
+    String userMail = widget.data.auth != null? widget.data.auth.email.split("@")[0] : "";    
     setState(() {
+      storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
+    storeList.add(storeList[0]);
       _stores = storeList;
       _user = userMail;
       _route = widget.data.route;
@@ -43,61 +52,30 @@ class _MainLayoutState extends State<MainLayout> {
     super.initState();
   }
 
-  Widget _appBar() {
-    return Container(
-      padding: AppTheme.padding,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          RotatedBox(
-            quarterTurns: 4,
-            child: _icon(Icons.sort, color: Colors.black54),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(13)),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Color(0xfff8f8f8),
-                      blurRadius: 10,
-                      spreadRadius: 10),
-                ],
-              ),
-              child: Image.asset("assets/user.png"),
-            ),
-          ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)))
-        ],
-      ),
-    );
+  String _title(){
+    String text = "";
+    if(_route != null){
+      if(_route.contains("stores")){
+        text = "Pilih Toko";
+      }else if(_route.contains("transaction")){
+        text = "Transaksi";
+      }else if(_route.contains("management")){
+        text = "Manajemen Data";
+      }
+    }
+    return text;
   }
-
-  Widget _icon(IconData icon, {Color color = LightColor.iconColor}) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(13)),
-          color: Theme.of(context).backgroundColor,
-          boxShadow: AppTheme.shadow),
-      child: Icon(
-        icon,
-        color: color,
-      ),
-    ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)));
-  }
-
 
   Widget _content(){
     if(_route == null){
       return null;
     }
-    if(_route.contains('stores')){
+    if(_route.contains("stores")){
       return StoreList(stores:  _stores);
-    }else if(_route.contains('transaction')){
+    }else if(_route.contains("transaction")){
       
       return StoreList(stores:  _stores);
-    }else if(_route.contains('management')){
+    }else if(_route.contains("management")){
 
       return StoreList(stores:  _stores);
     }else{
@@ -108,6 +86,7 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarTop(title:_title(), noLeftIcon: true),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
@@ -115,20 +94,10 @@ class _MainLayoutState extends State<MainLayout> {
             SingleChildScrollView(
               child: Container(
                 height: AppTheme.fullHeight(context) - 50,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xfffbfbfb),
-                      Color(0xfff7f7f7),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+                decoration: AppTheme.mainBackground(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _appBar(),
                     Expanded(
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 300),

@@ -1,11 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sembago/src/model/dataContext.dart';
-import './signupPage.dart';
-import '../../functions/mainFunction.dart';
-import '../../widgets/bezierContainer.dart';
-import '../../widgets/alert.dart';
-import '../../widgets/loadingOverlay.dart';
+import "package:flutter/material.dart";
+import "package:flutter_svg/flutter_svg.dart";
+import "package:sembago/src/model/dataContext.dart";
+import 'package:sembago/src/themes/light_color.dart';
+import 'package:sembago/src/themes/theme.dart';
+import 'package:sembago/src/widgets/appBarTop.dart';
+import 'package:sembago/src/widgets/buttonBlock.dart';
+import 'package:sembago/src/widgets/buttonIcon.dart';
+import "./signupPage.dart";
+import "../../functions/mainFunction.dart";
+import "../../widgets/bezierContainer.dart";
+import "../../widgets/alert.dart";
+import "../../widgets/loadingOverlay.dart";
+import "../../widgets/divider.dart";
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -39,24 +45,24 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: Text('Email belum diverifikasi'),
-          content: Text('Silahkan buka inbox email anda (' +result.email+') lalu klik link verifikasi'),
+          title: Text("Email belum diverifikasi"),
+          content: Text("Silahkan buka inbox email anda (" +result.email+") lalu klik link verifikasi"),
           actions: <Widget>[
             TextButton(
               onPressed: () => resendVerification(),
-              child: const Text('Kirim Link Lagi'),
+              child: const Text("Kirim Link Lagi"),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Tutup'),
+              child: const Text("Tutup"),
             ),
           ],
         ),
       );
       return;
     }
-    DataContext data = DataContext(auth: result, route: '/stores');
-    Navigator.of(context).pushNamed('/main', arguments: data);
+    DataContext data = DataContext(auth: result, route: "/stores");
+    Navigator.of(context).pushNamed("/main", arguments: data);
   }
 
   void resendVerification() async {
@@ -67,38 +73,17 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: Text('Link verifikasi terkirim'),
-          content: Text('Silahkan buka inbox email anda (' +result.email+') lalu klik link verifikasi'),
+          title: Text("Link verifikasi terkirim"),
+          content: Text("Silahkan buka inbox email anda (" +result.email+") lalu klik link verifikasi"),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Tutup'),
+              child: const Text("Tutup"),
             ),
           ],
         ),
       );
     }
-  }
-
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Kembali',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _entryField({
@@ -130,69 +115,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _submitButton() {
-    return InkWell(
-      onTap: () {
-        processSignIn();
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-        child: Text(
-          'Masuk',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-      )  
-    );
-  }
-
-  Widget _divider() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-          ),
-          Text('atau'),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _facebookButton() {
     return Container(
       height: 50,
@@ -212,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                     topLeft: Radius.circular(5)),
               ),
               alignment: Alignment.center,
-              child: Text('f',
+              child: Text("f",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
@@ -229,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     topRight: Radius.circular(5)),
               ),
               alignment: Alignment.center,
-              child: Text('Masuk dengan Facebook',
+              child: Text("Masuk dengan Facebook",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -248,23 +170,22 @@ class _LoginPageState extends State<LoginPage> {
             context, MaterialPageRoute(builder: (context) => SignUpPage()));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Belum punya akun?',
+              "Belum punya akun?",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              'Daftar',
+              "Daftar",
               style: TextStyle(
-                  color: Color(0xfff79c4f),
+                  color: LightColor.orange,
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),
@@ -285,52 +206,66 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBarTop(title: "Masuk", noUser: true),
       body: Container(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .2),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    color: Colors.transparent,
-                    child: SvgPicture.asset('assets/sembago.svg',
-                        semanticsLabel: 'Sembago Logo'),
-                  ),
-                  _emailPasswordWidget(),
-                  SizedBox(height: 20),
-                  _submitButton(),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.centerRight,
-                    child: Text('Lupa Password ?',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
-                  ),
-                  _divider(),
-                  _facebookButton(),
-                  SizedBox(height: height * .055),
-                  _createAccountLabel(),
-                ],
-              ),
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              bottom: -AppTheme.fullHeight(context) * .3,
+              right: -MediaQuery.of(context).size.width * .2,
+              child: BezierContainer()
             ),
-          ),
-          Positioned(top: 40, left: 0, child: _backButton()),
-        ],
-      ),
-    ));
+            Center(
+              child:ListView(
+                // reverse: true,
+                shrinkWrap: true,
+                padding: AppTheme.padding,
+                children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 30),
+                      height: 100,
+                      width: 100,
+                      color: Colors.transparent,
+                      child: SvgPicture.asset("assets/sembago.svg",
+                          semanticsLabel: "Sembago Logo"),
+                    ),
+                    _emailPasswordWidget(),
+                    SizedBox(height: 20),
+                    ButtonBlock(text: "Masuk", onClick: processSignIn),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      alignment: Alignment.centerRight,
+                      child: Text("Lupa Password ?", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    ),
+                    DividerH(text:"atau"),
+                    _facebookButton(),
+                    _createAccountLabel(),
+                  ],
+              )
+            )
+          ],
+        )
+      )
+    );
+    // return Scaffold(
+    //   body: Container(
+    //     height: height,
+    //     child: Stack(
+    //       children: <Widget>[
+    //         Positioned(
+    //             top: -height * .15,
+    //             right: -MediaQuery.of(context).size.width * .4,
+    //             child: BezierContainer()),
+    //         Container(
+    //           padding: EdgeInsets.symmetric(horizontal: 20),
+    //           child: SingleChildScrollView(
+    //             child: 
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   )
+    // );
   }
 }

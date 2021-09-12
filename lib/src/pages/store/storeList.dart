@@ -1,14 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:sembago/src/model/store.dart';
+import 'package:sembago/src/pages/store/newStore.dart';
+import 'package:sembago/src/themes/light_color.dart';
 import 'package:sembago/src/themes/theme.dart';
+import 'package:sembago/src/widgets/buttonBlock.dart';
+import 'package:sembago/src/widgets/divider.dart';
 import 'package:sembago/src/widgets/title_text.dart';
 
 class StoreList extends StatelessWidget {
   StoreList({Key key, this.stores}) : super(key: key);
-  final Iterable<Store> stores;
+  final List<Store> stores;
 
   Widget _listView() {
-    return Column(children: stores.map((s) => _item(s)).toList());
+    return Container(
+      padding: AppTheme.hPadding,
+      child: Column(
+        children: stores.map((s) => _item(s)).toList()
+      )
+    );
   }
 
   Widget _item(Store store) {
@@ -18,6 +29,7 @@ class StoreList extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ListTile(
+              leading: Image.network(store.picture, width: 50, height: 50),
               title: TitleText(
                 text: store.name,
                 fontSize: 15,
@@ -25,7 +37,8 @@ class StoreList extends StatelessWidget {
               ),
               subtitle: TitleText(
                 text: "${store.address}\n${store.phone}",
-                fontSize: 14,
+                fontSize: 12,
+                color: Colors.grey,
               ),
               isThreeLine: true,
             )
@@ -35,52 +48,54 @@ class StoreList extends StatelessWidget {
     );
   }
 
-  Widget _addNewButton(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Navigator.push(
-        //   context, MaterialPageRoute(builder: (context) => LoginPage())
-        // );
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 13),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Color(0xffdf8e33).withAlpha(100),
-                  offset: Offset(2, 4),
-                  blurRadius: 8,
-                  spreadRadius: 2)
-            ],
-            color: Colors.white),
-        child: Text(
-          'Buat Toko Baru',
-          style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: AppTheme.padding,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _listView(),
-            Divider(
-              thickness: 1,
-              height: 70,
-            ),
-            SizedBox(height: 30),
-            _addNewButton(context),
-          ],
-        ),
-      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          SingleChildScrollView(
+            child: stores.length == 0 ? Text("Belum Ada Toko") : _listView(),
+          ),
+          Positioned(
+            bottom:0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.only(bottom:100, left: 20, right:20, top:10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    spreadRadius: 2
+                  )
+                ],
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xfffbb448), Color(0xffe46b10)]
+                )
+              ),
+              child: Column(
+                children: [
+                  Text("Belum punya toko?", style: TextStyle(color: Colors.white)),
+                  SizedBox(height:10),
+                  ButtonBlock(
+                    type: ButtonBlock.TYPE_BORDER,
+                    onClick: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NewStore()));
+                    },
+                    text: "Buat Toko Baru"
+                  )
+                ],
+              ),
+            )
+          )
+        ]
+      )
     );
   }
 }

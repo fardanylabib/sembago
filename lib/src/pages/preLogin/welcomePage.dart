@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sembago/src/widgets/buttonBlock.dart';
 import './loginPage.dart';
 import './signupPage.dart';
 
@@ -13,53 +14,29 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  Widget _submitButton() {
-    return InkWell(
-      onTap: () {
+  Widget _signInButton() {
+    return ButtonBlock(
+      type: ButtonBlock.TYPE_WHITE,
+      text: "Masuk",
+      onClick: (){
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context, 
+          MaterialPageRoute(builder: (context) => LoginPage())
+        );
       },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 13),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Color(0xffdf8e33).withAlpha(100),
-                  offset: Offset(2, 4),
-                  blurRadius: 8,
-                  spreadRadius: 2)
-            ],
-            color: Colors.white),
-        child: Text(
-          'Masuk',
-          style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
-        ),
-      ),
     );
   }
 
   Widget _signUpButton() {
-    return InkWell(
-      onTap: () {
+    return ButtonBlock(
+      type: ButtonBlock.TYPE_BORDER,
+      text: "Daftar Baru",
+      onClick: (){
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+          context, 
+          MaterialPageRoute(builder: (context) => SignUpPage())
+        );
       },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 13),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          border: Border.all(color: Colors.white, width: 2),
-        ),
-        child: Text(
-          'Daftar Baru',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-      ),
     );
   }
 
@@ -92,7 +69,7 @@ class _WelcomePageState extends State<WelcomePage> {
               SizedBox(
                 height: 80,
               ),
-              _submitButton(),
+              _signInButton(),
               SizedBox(
                 height: 20,
               ),
