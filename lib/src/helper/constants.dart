@@ -16,4 +16,7 @@ class Auth {
 class StoreStatus{
   static const String STORE_NOT_FOUND = 'Toko tidak ditemukan';
   static const String STORE_CREATION_ERROR = 'Toko gagal dibuat';
+  static const String STORE_FIELD_REQUIRED = 'Data isian tidak lengkap';
+  static const String STORE_EMPLOYEE_FIELD_REQUIRED = 'Data karyawan tidak lengkap';
+  
 }

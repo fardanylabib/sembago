@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sembago/src/model/dataContext.dart';
+import 'package:sembago/src/model/store.dart';
+import 'package:sembago/src/themes/theme.dart';
+import 'package:sembago/src/widgets/appBarTop.dart';
 import 'package:sembago/src/widgets/buttonBlock.dart';
 import 'package:sembago/src/widgets/buttonIcon.dart';
 import '../../functions/mainFunction.dart';
@@ -36,18 +39,22 @@ class _NewStoreState extends State<NewStore> {
     super.dispose();
   }
 
-  void addStore({
-      String address,
-      String name,
-      String phone,
-      String picture
-    }) async{
+  void addStore() async{
+    String name = _nameController.text;
+    String address = _addressController.text;
+    String phone = _phoneController.text;
+    List<Employee> employees = _employeeFormController.map((form){
+      return Employee(
+        email: form.emailController.text,
+        name: form.nameController.text
+      );
+    }).toList();
     final overlay = LoadingOverlay.of(context);
     final result = await overlay.during(AppFunction.createStore(
       address: address,
       name: name,
       phone: phone,
-      picture: picture
+      employees: employees
     ));
     if(result.runtimeType == String){ 
       Alert.showAlert(context, message:result);
@@ -56,27 +63,6 @@ class _NewStoreState extends State<NewStore> {
     
     DataContext data = DataContext(store: result);
     // Navigator.of(context).pushNamed('/stores', arguments: data);
-  }
-
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Kembali',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _entryField({
@@ -102,7 +88,9 @@ class _NewStoreState extends State<NewStore> {
               decoration: InputDecoration(
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
-                  filled: true))
+                  filled: true
+              )
+          )
         ],
       ),
     );
@@ -178,14 +166,17 @@ class _NewStoreState extends State<NewStore> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBarTop(
+        title: "Isi Data Toko"
+      ),
       body: Container(
         height: height,
         child: Stack(
           children: <Widget>[
             Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
+              bottom: -AppTheme.fullHeight(context) * .3,
+              right: -MediaQuery.of(context).size.width * .2,
+              child: BezierContainer()
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -194,7 +185,7 @@ class _NewStoreState extends State<NewStore> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: height * .2),
+                    SizedBox(height: 30),
                     _entryField(title:"Nama Toko", controller: _nameController),
                     _entryField(title:"Alamat", controller: _addressController),
                     _entryField(title:"No.Telepon", controller: _phoneController),
@@ -206,12 +197,12 @@ class _NewStoreState extends State<NewStore> {
                     _employeeForm(),
                     _employeeAddButton(),
                     SizedBox(height: 30),
-                    ButtonBlock(text: "Buat Toko", onClick: addStore)
+                    ButtonBlock(text: "Buat Toko", onClick: addStore),
+                    SizedBox(height: 30),
                   ],
                 ),
               ),
-            ),
-            Positioned(top: 40, left: 0, child: _backButton()),
+            )
           ],
         ),
       ),

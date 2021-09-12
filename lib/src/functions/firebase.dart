@@ -123,14 +123,16 @@ class FirebaseClass {
     String address,
     String name,
     String phone,
-    String picture
+    String picture,
+    List<Employee> employees
   }) async{
     try{
       Map<String, dynamic> data = Store(
         address:address,
         name: name,
         phone: phone,
-        picture: picture
+        picture: picture,
+        employees: employees
       ).toJson();
       DocumentReference newStore =  await _firestore.collection('store').add(data);
       if(newStore.id != null){

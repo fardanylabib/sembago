@@ -11,6 +11,12 @@ class Employee{
       email: _email
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'name': this.name,
+      'email': this.email,
+    };
+  }
 }
 
 class Store{
@@ -58,12 +64,13 @@ class Store{
   }
 
   Map<String, dynamic> toJson() {
+    List<Map> _emps = this.employees.map((emp) => emp.toJson()).toList();
     return {
       'name': this.name,
       'inventoryID': this.inventoryID,
       'address': this.address,
       'phone': this.phone,
-      'employees': this.employees,
+      'employees': _emps,
       'picture': this.picture
     };
   }

@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     DataContext data = DataContext(auth: result, route: "/stores");
+    AppFunction.setAauthData(result);
     Navigator.of(context).pushNamed("/main", arguments: data);
   }
 

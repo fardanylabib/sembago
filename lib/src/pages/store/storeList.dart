@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sembago/src/model/store.dart';
 import 'package:sembago/src/pages/store/newStore.dart';
 import 'package:sembago/src/themes/light_color.dart';
@@ -15,7 +16,7 @@ class StoreList extends StatelessWidget {
 
   Widget _listView() {
     return Container(
-      padding: AppTheme.hPadding,
+      padding: EdgeInsets.only(left:10, right:10, top:10, bottom: 250),
       child: Column(
         children: stores.map((s) => _item(s)).toList()
       )
@@ -29,7 +30,9 @@ class StoreList extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ListTile(
-              leading: Image.network(store.picture, width: 50, height: 50),
+              leading: store.picture == null ? 
+              Image.asset("assets/store.png", width: 50, height:50):
+              Image.network(store.picture, width: 50, height: 50),
               title: TitleText(
                 text: store.name,
                 fontSize: 15,
@@ -81,7 +84,7 @@ class StoreList extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Text("Belum punya toko?", style: TextStyle(color: Colors.white)),
+                  Text("Toko tidak ada di list?", style: TextStyle(color: Colors.white)),
                   SizedBox(height:10),
                   ButtonBlock(
                     type: ButtonBlock.TYPE_BORDER,
