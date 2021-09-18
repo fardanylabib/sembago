@@ -18,5 +18,11 @@ class StoreStatus{
   static const String STORE_CREATION_ERROR = 'Toko gagal dibuat';
   static const String STORE_FIELD_REQUIRED = 'Data isian tidak lengkap';
   static const String STORE_EMPLOYEE_FIELD_REQUIRED = 'Data karyawan tidak lengkap';
-  
+  static const String STORE_ID_MISMATCH = 'Data toko di device berbeda dengan cloud';  
+  static const String INVENTORY_NOT_FOUND = 'Inventory tidak ditemukan';
+  static const String INVENTORY_CREATION_ERROR = 'Inventory gagal dibuat';
+}
+
+class StorageStatus{
+    static const String LOCAL_STORAGE_ERROR = 'Terjadi kesalahan pada penyimpanan';
 }

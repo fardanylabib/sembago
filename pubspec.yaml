@@ -30,6 +30,8 @@ dependencies:
   lottie: ^0.7.0+1
   firebase_analytics: ^7.0.1
   cloud_firestore: ^0.16.0+1
+  localstorage: ^3.0.6+9
+  dropdown_search: ^1.0.0
 
 dev_dependencies:
   flutter_test:

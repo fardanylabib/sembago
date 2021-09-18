@@ -1,9 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sembago/src/helper/constants.dart';
-import 'package:sembago/src/model/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../model/store.dart';
+import "package:firebase_core/firebase_core.dart";
+import "package:firebase_auth/firebase_auth.dart";
+import "package:localstorage/localstorage.dart";
+import "package:sembago/src/helper/constants.dart";
+import "package:sembago/src/model/auth.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:sembago/src/model/inventory.dart";
+import "../model/store.dart";
 
 class FirebaseClass {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,11 +39,11 @@ class FirebaseClass {
         token: idToken
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
+      if (e.code == "weak-password") {
         return AuthData(
           error: Auth.WEAK_PASSWORD
         );
-      } else if (e.code == 'email-already-in-use') {
+      } else if (e.code == "email-already-in-use") {
         return AuthData(
           error: Auth.ACCOUNT_EXIST
         );
@@ -72,11 +74,11 @@ class FirebaseClass {
         token: idToken
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+      if (e.code == "user-not-found") {
         return AuthData(
           error: Auth.USER_NOT_FOUND
         );
-      } else if (e.code == 'wrong-password') {
+      } else if (e.code == "wrong-password") {
         return AuthData(
           error: Auth.WRONG_PASSWORD
         );
@@ -112,37 +114,67 @@ class FirebaseClass {
   }
 
   static Future<List<Store>> storeList() async{
-    CollectionReference stores = _firestore.collection('store');
-    QuerySnapshot query = await stores.get();
-    return query.docs.map((doc) {
-      return Store.fromJson(doc.data());
-    }).toList();
+    try{
+      CollectionReference stores = _firestore.collection("store");
+      QuerySnapshot query = await stores.get();
+      return query.docs.map((doc) {
+        return Store.fromJson(doc.data());
+      }).toList();
+    }catch(error){
+      return [];
+    }
   }
 
-  static Future<dynamic> createStore({
-    String address,
-    String name,
-    String phone,
-    String picture,
-    List<Employee> employees
-  }) async{
+  static Future<dynamic> getStoreInventory(String storeID) async{
     try{
-      Map<String, dynamic> data = Store(
-        address:address,
-        name: name,
-        phone: phone,
-        picture: picture,
-        employees: employees
-      ).toJson();
-      DocumentReference newStore =  await _firestore.collection('store').add(data);
-      if(newStore.id != null){
-        DocumentSnapshot storeDoc = await newStore.get();
-        return Store.fromJson(storeDoc.data());
+      CollectionReference iventoryCollection = _firestore.collection("inventory");
+      QuerySnapshot query = await iventoryCollection.where("storeID", isEqualTo: storeID).get();
+      //get first match
+      return Inventory.fromJson(query.docs[0].data());
+    }catch(error){
+      return null;
+    } 
+  }
+
+  static Future<bool> updateStoreInventory(Inventory inventory)async{
+    try{
+      Map<String, dynamic> data = inventory.toJson();
+      CollectionReference inventoryCollection = _firestore.collection("inventory");
+      await inventoryCollection.doc(inventory.id).set(data);
+      return true;
+    }catch(error){
+      return false;
+    }
+  }
+
+  static Future<dynamic> createStore(Store store) async{
+    try{
+      Map<String, dynamic> data = store.toJson();
+      DocumentReference newStore =  await _firestore.collection("store").add(data);
+      if(newStore.id == null){
+        return StoreStatus.STORE_NOT_FOUND;
       }
-      return StoreStatus.STORE_NOT_FOUND;
+      DocumentSnapshot storeDoc = await newStore.get();
+      return Store.fromJson(storeDoc.data());
     }catch(e){
       String errorMsg = e.toString();
       return "${StoreStatus.STORE_CREATION_ERROR} | $errorMsg";
     }
   }
+
+  static Future<dynamic> createInventory(Inventory inventory) async{
+    try{
+      Map<String, dynamic> data = inventory.toJson();
+      DocumentReference newInventory =  await _firestore.collection("inventory").add(data);
+      if(newInventory.id == null){
+        return StoreStatus.INVENTORY_NOT_FOUND;
+      }
+      DocumentSnapshot invDoc = await newInventory.get();
+      return Inventory.fromJson(invDoc.data());
+    }catch(e){
+      String errorMsg = e.toString();
+      return "${StoreStatus.INVENTORY_CREATION_ERROR} | $errorMsg";
+    }
+  }
+
 }

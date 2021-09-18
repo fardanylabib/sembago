@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sembago/src/model/dataContext.dart';
 import 'package:sembago/src/model/store.dart';
 import 'package:sembago/src/pages/store/newStore.dart';
 import 'package:sembago/src/themes/light_color.dart';
@@ -14,40 +15,34 @@ class StoreList extends StatelessWidget {
   StoreList({Key key, this.stores}) : super(key: key);
   final List<Store> stores;
 
-  Widget _listView() {
-    return Container(
-      padding: EdgeInsets.only(left:10, right:10, top:10, bottom: 250),
-      child: Column(
-        children: stores.map((s) => _item(s)).toList()
-      )
-    );
-  }
-
-  Widget _item(Store store) {
-    return Container(
-      height: 80,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: ListTile(
-              leading: store.picture == null ? 
-              Image.asset("assets/store.png", width: 50, height:50):
-              Image.network(store.picture, width: 50, height: 50),
-              title: TitleText(
-                text: store.name,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
-              subtitle: TitleText(
-                text: "${store.address}\n${store.phone}",
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-              isThreeLine: true,
+  Widget _item(Store store, Function onClick) {
+    return InkWell(
+      onTap: onClick,
+      child: Container(
+        height: 80,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: ListTile(
+                leading: store.picture == null ? 
+                Image.asset("assets/store.png", width: 50, height:50):
+                Image.network(store.picture, width: 50, height: 50),
+                title: TitleText(
+                  text: store.name,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+                subtitle: TitleText(
+                  text: "${store.address}\n${store.phone}",
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+                isThreeLine: true,
+              )
             )
-          )
-        ],
-      ),
+          ],
+        ),
+      )
     );
   }
 
@@ -58,7 +53,18 @@ class StoreList extends StatelessWidget {
         fit: StackFit.expand,
         children: <Widget>[
           SingleChildScrollView(
-            child: stores.length == 0 ? Text("Belum Ada Toko") : _listView(),
+            child: Container(
+              padding: EdgeInsets.only(left:10, right:10, top:10, bottom: 250),
+              child: stores.length == 0 ? Text("Belum Ada Toko") : 
+              Column(
+                children: stores.map((s) => 
+                  _item(s, (){
+                    DataContext data = DataContext(route: "/inventory", store: s);
+                    Navigator.of(context).pushNamed("/main", arguments: data);
+                  })
+                ).toList()
+              )
+            )
           ),
           Positioned(
             bottom:0,

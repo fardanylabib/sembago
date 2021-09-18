@@ -6,6 +6,7 @@ import 'package:sembago/src/themes/theme.dart';
 import 'package:sembago/src/widgets/appBarTop.dart';
 import 'package:sembago/src/widgets/buttonBlock.dart';
 import 'package:sembago/src/widgets/buttonIcon.dart';
+import 'package:sembago/src/widgets/entryField.dart';
 import '../../functions/mainFunction.dart';
 import '../../widgets/bezierContainer.dart';
 import '../../widgets/alert.dart';
@@ -56,44 +57,16 @@ class _NewStoreState extends State<NewStore> {
       phone: phone,
       employees: employees
     ));
-    if(result.runtimeType == String){ 
-      Alert.showAlert(context, message:result);
+    if(result.error != null){ 
+      Alert.showAlert(context, message:result.error);
       return;
     }
-    
-    DataContext data = DataContext(store: result);
-    // Navigator.of(context).pushNamed('/stores', arguments: data);
-  }
-
-  Widget _entryField({
-      String title,
-      TextEditingController controller,
-      bool isPassword = false
-    }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextField(
-              controller: controller,
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true
-              )
-          )
-        ],
-      ),
+    DataContext data = DataContext(
+      route: "/inventory",
+      inventory: result.inventory,
+      store: result.store
     );
+    Navigator.of(context).pushNamed("/main", arguments: data);
   }
 
   Widget _employeeAddButton() {
@@ -152,8 +125,8 @@ class _NewStoreState extends State<NewStore> {
                   }
                 )
               ),
-              _entryField(title:"Nama", controller: cont.nameController),
-              _entryField(title:"Email", controller: cont.emailController),
+              EntryField(title:"Nama", controller: cont.nameController),
+              EntryField(title:"Email", controller: cont.emailController),
               SizedBox(height:20)
             ],
           );
@@ -186,9 +159,9 @@ class _NewStoreState extends State<NewStore> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: 30),
-                    _entryField(title:"Nama Toko", controller: _nameController),
-                    _entryField(title:"Alamat", controller: _addressController),
-                    _entryField(title:"No.Telepon", controller: _phoneController),
+                    EntryField(title:"Nama Toko", controller: _nameController),
+                    EntryField(title:"Alamat", controller: _addressController),
+                    EntryField(title:"No.Telepon", controller: _phoneController),
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text("Karyawan", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),

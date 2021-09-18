@@ -5,7 +5,7 @@ import 'package:sembago/src/themes/light_color.dart';
 import 'package:sembago/src/themes/theme.dart';
 import 'package:sembago/src/widgets/appBarTop.dart';
 import 'package:sembago/src/widgets/buttonBlock.dart';
-import 'package:sembago/src/widgets/buttonIcon.dart';
+import 'package:sembago/src/widgets/entryField.dart';
 import "./signupPage.dart";
 import "../../functions/mainFunction.dart";
 import "../../widgets/bezierContainer.dart";
@@ -85,35 +85,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-  }
-
-  Widget _entryField({
-    String title,
-    TextEditingController controller,
-    bool isPassword = false
-  }) {
-      return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextField(
-              controller: controller,
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
-        ],
-      ),
-    );
   }
 
   Widget _facebookButton() {
@@ -199,8 +170,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField(title:"Email", controller: _emailController),
-        _entryField(title:"Password", isPassword: true, controller: _passwordController),
+        EntryField(title:"Email", controller: _emailController),
+        EntryField(title:"Password", isPassword: true, controller: _passwordController),
       ],
     );
   }

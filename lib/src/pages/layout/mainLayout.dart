@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:sembago/src/functions/mainFunction.dart";
 import "package:sembago/src/model/dataContext.dart";
+import 'package:sembago/src/model/inventory.dart';
 import "package:sembago/src/model/store.dart";
+import 'package:sembago/src/pages/inventory/productList.dart';
 import "package:sembago/src/pages/store/storeList.dart";
 import "package:sembago/src/themes/theme.dart";
 import "package:sembago/src/widgets/BottomNavigationBar/bottom_navigation_bar.dart";
@@ -19,6 +21,7 @@ class _MainLayoutState extends State<MainLayout> {
   String _user = "";
   String _route = "";
   String _title = "";
+  bool _isNoLeftIcon = true;
   Widget _content = SizedBox.shrink();
 
   Future<void> initData()async{
@@ -31,6 +34,22 @@ class _MainLayoutState extends State<MainLayout> {
           _content = StoreList(stores: storeList);
           _user = userMail;
           _title = "Pilih Toko";
+          _isNoLeftIcon = true;
+        });
+      }else if(_route.contains("inventory")){
+        Inventory widgetInventory = widget.data.inventory;
+        Inventory inventory;
+        Store store = widget.data.store;
+        if(widgetInventory == null){
+          DataContext result = await AppFunction.getAndSyncStoreInventory(store.id);
+          inventory = result.inventory;
+        }else{
+          inventory = widgetInventory;
+        }
+        setState(() {
+          _content = ProductList(inventory: inventory, store: store);
+          _title = "Daftar Produk";
+          _isNoLeftIcon = false;
         });
       }
     }    
@@ -38,15 +57,14 @@ class _MainLayoutState extends State<MainLayout> {
 
   @override
   initState(){
-    initData().then((result){
-      super.initState();
-    });
+    initData();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarTop(title:_title, noLeftIcon: true),
+      appBar: AppBarTop(title:_title, noLeftIcon: _isNoLeftIcon),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
