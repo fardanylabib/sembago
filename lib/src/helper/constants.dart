@@ -16,11 +16,15 @@ class Auth {
 class StoreStatus{
   static const String STORE_NOT_FOUND = 'Toko tidak ditemukan';
   static const String STORE_CREATION_ERROR = 'Toko gagal dibuat';
-  static const String STORE_FIELD_REQUIRED = 'Data isian tidak lengkap';
+  static const String STORE_FIELD_REQUIRED = 'Data isian toko tidak lengkap';
   static const String STORE_EMPLOYEE_FIELD_REQUIRED = 'Data karyawan tidak lengkap';
   static const String STORE_ID_MISMATCH = 'Data toko di device berbeda dengan cloud';  
   static const String INVENTORY_NOT_FOUND = 'Inventory tidak ditemukan';
   static const String INVENTORY_CREATION_ERROR = 'Inventory gagal dibuat';
+}
+
+class ProductStatus{
+  static const String PRODUCT_FIELD_REQUIRED = 'Data isian produk tidak lengkap';
 }
 
 class StorageStatus{

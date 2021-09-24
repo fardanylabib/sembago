@@ -45,6 +45,10 @@ class Inventory{
     this.lastUpdated
   });
 
+  void addItem(Product newItem){
+    this.items.add(newItem);
+  }
+
   void addItems(List<Product> newItems){
     this.items.addAll(newItems);
   }

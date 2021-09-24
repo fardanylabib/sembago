@@ -1,17 +1,33 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:sembago/src/functions/mainFunction.dart';
 import 'package:sembago/src/model/inventory.dart';
 import 'package:sembago/src/model/store.dart';
 import 'package:sembago/src/pages/inventory/newProduct.dart';
 import 'package:sembago/src/pages/store/newStore.dart';
+import 'package:sembago/src/widgets/alert.dart';
 import 'package:sembago/src/widgets/buttonBlock.dart';
 import 'package:sembago/src/widgets/title_text.dart';
+import '../../widgets/loadingOverlay.dart';
 
-class ProductList extends StatelessWidget {
+class ProductList extends StatefulWidget {
   ProductList({Key key, this.inventory, this.store}) : super(key: key);
   final Inventory inventory;
   final Store store;
+
+  @override
+  _ProductListState createState() => _ProductListState();
+}
+
+class _ProductListState extends State<ProductList> {
+
+  void uploadData() async {
+    final overlay = LoadingOverlay.of(context);
+    final result = await overlay.during(AppFunction.uploadProductList());
+    if(result.error != null){ 
+      Alert.showAlert(context, message:result.error);
+      return;
+    }
+  }
 
   Widget _item(Product product) {
     return Container(
@@ -56,9 +72,9 @@ class ProductList extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.only(left:10, right:10, top:10, bottom: 150),
               alignment: Alignment.center,
-              child: inventory.items.length == 0 ? Text("Belum Ada Produk di ${store.name}") :
+              child: widget.inventory.items.length == 0 ? Text("Belum Ada Produk di ${widget.store.name}") :
               Column(
-                children: inventory.items.map((s) => _item(s)).toList()
+                children: widget.inventory.items.map((s) => _item(s)).toList()
               )
             ),
           ),
@@ -84,17 +100,22 @@ class ProductList extends StatelessWidget {
                   colors: [Color(0xfffbb448), Color(0xffe46b10)]
                 )
               ),
-              child: Column(
+              child: Row(
                 children: [
                   ButtonBlock(
                     type: ButtonBlock.TYPE_BORDER,
                     onClick: (){
                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NewProduct(inventory: this.inventory))
+                        MaterialPageRoute(builder: (context) => NewProduct(inventory: widget.inventory))
                       );
                     },
                     text: "Tambah Produk"
-                  )
+                  ),
+                  ButtonBlock(
+                    type: ButtonBlock.TYPE_BORDER,
+                    onClick: uploadData,
+                    text: "Upload Data"
+                  ),
                 ],
               ),
             )

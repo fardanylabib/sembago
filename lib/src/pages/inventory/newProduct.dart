@@ -47,19 +47,18 @@ class _NewProductState extends State<NewProduct> {
     String code = _codeController.text;
 
     final overlay = LoadingOverlay.of(context);
-    final result = await overlay.during(AppFunction.addProduct(
+    final result = await overlay.during(AppFunction.addProductOffline(
       name: name,
       price: price,
       category: category,
       code: code,
       inventory: widget.inventory
     ));
-    if(result.runtimeType == String){ 
-      Alert.showAlert(context, message:result);
+    if(result.error != null){ 
+      Alert.showAlert(context, message:result.error);
       return;
     }
-    
-    DataContext data = DataContext(inventory: result, route: "/inventory");
+    final data = DataContext(inventory: result.inventory, route: "/inventory");
     Navigator.of(context).pushNamed("/main", arguments: data);
   }
 

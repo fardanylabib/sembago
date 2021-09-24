@@ -1,5 +1,6 @@
 import 'package:localstorage/localstorage.dart';
 import 'package:sembago/src/helper/constants.dart';
+import 'package:sembago/src/helper/stringHelper.dart';
 import 'package:sembago/src/model/auth.dart';
 import 'package:sembago/src/model/dataContext.dart';
 import 'package:sembago/src/model/inventory.dart';
@@ -170,7 +171,7 @@ class AppFunction{
     );
   }
 
-  static Future<dynamic> addProduct({
+  static Future<DataContext> addProductOffline({
     String category,
     String name,
     String code,
@@ -178,36 +179,49 @@ class AppFunction{
     String image,
     Inventory inventory
   }) async{
-      List<Product> items = [];
-      if(inventory == null){ //no inventory loaded
-        final LocalStorage storage = new LocalStorage("inventory");
-        final isStorageReady = await storage.ready;
-        if(!isStorageReady){
-          return null;
-        }
-        List<String> categories = [];
-        List<Map<String, dynamic>> itemsJson = [];
-        if(storage.getItem("storeID") == null){
-          storage.setItem("storeID", inventory.storeID);
-          storage.setItem("categories", categories);
-        }else{
-          categories = storage.getItem("categories");
-          itemsJson = storage.getItem("items");
-          items = itemsJson.map((it) => Product.fromJson(it)).toList();
-        }
-        //appdend new product to items
-        items.add(Product(
-          category: category,
-          name: name,
-          code: code,
-          price: price,
-          image: image
-        ));
-        itemsJson = items.map((it) => it.toJson()).toList();
-        storage.setItem("items", itemsJson);
-      }else{//inventory loaded
-
-      }
+    if(
+      name==null || name.length < 1 ||
+      price==null || price==0
+    ){
+      return DataContext(error: ProductStatus.PRODUCT_FIELD_REQUIRED);
+    }
+    if(code==null || code.length==0){
+      code = StringHelper.productNameToCode(name);
+    }
+    
+    final LocalStorage storage = new LocalStorage("inventory");
+    final isStorageReady = await storage.ready;
+    if(!isStorageReady){
+      return DataContext(error: StorageStatus.LOCAL_STORAGE_ERROR);
+    }
+    List<String> categories = [];
+    List<Map<String, dynamic>> itemsJson = [];
+    List<Product> items = [];
+    if(storage.getItem("storeID") == null){
+      await storage.setItem("storeID", inventory.storeID);
+      await storage.setItem("categories", categories);
+    }else{
+      categories = storage.getItem("categories");
+      itemsJson = storage.getItem("items");
+      items = itemsJson.map((it) => Product.fromJson(it)).toList();
+    }
+    //create Product object
+    final newProduct = Product(
+      category: category,
+      name: name,
+      code: code,
+      price: price,
+      image: image,
+    );
+    //appdend new product to items on local storage
+    items.add(newProduct);
+    //append new product to inventory object
+    inventory.addItem(newProduct);
+    inventory.lastUpdated = DateTime.now();
+    itemsJson = items.map((it) => it.toJson()).toList();
+    await storage.setItem("items", itemsJson);
+    await storage.setItem("lastUpdated", inventory.lastUpdated);
+    return DataContext(inventory: inventory);
   }
     // storage.setItem("items", categories);
     // try{
@@ -231,4 +245,13 @@ class AppFunction{
     //   String errorMsg = e.toString();
     //   return "${StoreStatus.STORE_CREATION_ERROR} | $errorMsg";
     // }
+
+    static Future<DataContext> uploadProductList()async{
+      final LocalStorage storage = new LocalStorage("inventory");
+      final isStorageReady = await storage.ready;
+      if(!isStorageReady){
+        return DataContext(error: StorageStatus.LOCAL_STORAGE_ERROR);
+      }
+      
+    }
 }
